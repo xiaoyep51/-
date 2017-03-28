@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
@@ -15,7 +16,7 @@ namespace RCApp_Win.Logic.Utility
         /// <summary>  
         /// 创建GET方式的HTTP请求  
         /// </summary>  
-        public static HttpWebResponse CreateGetHttpResponse(string url, int? timeout = null, string userAgent = "", CookieCollection cookies = null)
+        public static HttpWebResponse CreateGetHttpRequest(string url, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
         {
             HttpWebRequest request = null;
             if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
@@ -51,7 +52,7 @@ namespace RCApp_Win.Logic.Utility
         /// <summary>  
         /// 创建POST方式的HTTP请求  
         /// </summary>  
-        public static HttpWebResponse CreatePostHttpResponse(string url, IDictionary<string, string> parameters, int? timeout = null, string userAgent = "", CookieCollection cookies = null)
+        public static HttpWebResponse CreatePostHttpRequest(string url, IDictionary<string, string> parameters, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
         {
             HttpWebRequest request = null;
             //如果是发送HTTPS请求  
@@ -67,6 +68,7 @@ namespace RCApp_Win.Logic.Utility
             }
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
+            request.CookieContainer = new CookieContainer(); //记录cookie
 
             //设置代理UserAgent和超时
             if (!string.IsNullOrWhiteSpace(userAgent))
@@ -107,7 +109,10 @@ namespace RCApp_Win.Logic.Utility
                 }
             }
             //string[] values = request.Headers.GetValues("Content-Type");
-            return request.GetResponse() as HttpWebResponse;
+
+            var response = request.GetResponse() as HttpWebResponse;
+            response.Cookies = request.CookieContainer.GetCookies(request.RequestUri);
+            return response;
         }
 
         /// <summary>
@@ -130,6 +135,50 @@ namespace RCApp_Win.Logic.Utility
                 StreamReader reader = new StreamReader(s, Encoding.UTF8);
                 return reader.ReadToEnd();
             }
+        }
+
+        public static string CreateUploadFileRequest(string url, List<string> filePathList, CookieCollection cookies = null)
+        {
+            var handler = new HttpClientHandler();
+            handler.CookieContainer.Add(cookies);
+            using (var httpClient = new HttpClient(handler))
+            using (var content = new MultipartFormDataContent())
+            {
+                foreach (var filePath in filePathList)
+                {
+                    string fileName = System.IO.Path.GetFileName(filePath);
+
+                    Stream imageStream = new FileStream(filePath, FileMode.Open);
+                    var streamContent = new StreamContent(imageStream);
+                    streamContent.Headers.Add("Content-Type", "application/octet-stream");
+                    streamContent.Headers.Add("Content-Disposition", "form-data; name=\"Filedata\"; filename=\"" + fileName + "\"");
+                    content.Add(streamContent);
+                }
+
+                HttpResponseMessage response = httpClient.PostAsync(url, content).Result;
+
+                if (response.IsSuccessStatusCode) //OK
+                {
+                    String jsonString = response.Content.ReadAsStringAsync().Result;
+                    return jsonString;
+                }
+            }
+            return "";
+        }
+
+        public static string UploadFileByWebClient(string url, string filePath, CookieCollection cookies)
+        {
+            WebClient wc = new WebClient();
+            wc.Credentials = CredentialCache.DefaultCredentials;
+            wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+            wc.Headers.Add("Cookie", "Signing=" + cookies["Signing"].Value);
+            //wc.QueryString["fname"] = openFileDialog1.SafeFileName;
+
+            //byte[] fileb = wc.UploadFile(new Uri(url), "POST", filePath);
+            byte[] fileb = wc.UploadFile(url, "POST", filePath);
+            //string res = Encoding.GetEncoding("gb2312").GetString(fileb);
+            string res = Encoding.GetEncoding("UTF-8").GetString(fileb);
+            return res;
         }
     }
 }
