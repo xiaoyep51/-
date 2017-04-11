@@ -31,6 +31,8 @@ namespace RCApp_Win.Logic.Utility
                 request = WebRequest.Create(url) as HttpWebRequest;
             }
             request.Method = "GET";
+            request.Proxy = null;
+            request.KeepAlive = false;
 
             //设置代理UserAgent和超时
             if (!string.IsNullOrWhiteSpace(userAgent))
@@ -55,7 +57,7 @@ namespace RCApp_Win.Logic.Utility
         public static HttpWebResponse CreatePostHttpRequest(string url, IDictionary<string, string> parameters, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
         {
             HttpWebRequest request = null;
-            //如果是发送HTTPS请求  
+            //如果是发送HTTPS请求
             if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
             {
                 ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CheckValidationResult);
@@ -69,6 +71,8 @@ namespace RCApp_Win.Logic.Utility
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.CookieContainer = new CookieContainer(); //记录cookie
+            //request.Proxy = null;
+            request.KeepAlive = false;
 
             //设置代理UserAgent和超时
             if (!string.IsNullOrWhiteSpace(userAgent))
@@ -102,16 +106,19 @@ namespace RCApp_Win.Logic.Utility
                         i++;
                     }
                 }
-                byte[] data = Encoding.ASCII.GetBytes(buffer.ToString());
+                byte[] data = Encoding.UTF8.GetBytes(buffer.ToString());
                 using (Stream stream = request.GetRequestStream())
                 {
                     stream.Write(data, 0, data.Length);
                 }
             }
-            //string[] values = request.Headers.GetValues("Content-Type");
-
+            else
+            {
+                request.ContentLength = 0;
+            }
             var response = request.GetResponse() as HttpWebResponse;
             response.Cookies = request.CookieContainer.GetCookies(request.RequestUri);
+            //request.Abort();
             return response;
         }
 
@@ -130,6 +137,7 @@ namespace RCApp_Win.Logic.Utility
         /// </summary>
         public static string GetResponseString(HttpWebResponse webresponse)
         {
+            using (webresponse)
             using (Stream s = webresponse.GetResponseStream())
             {
                 StreamReader reader = new StreamReader(s, Encoding.UTF8);
