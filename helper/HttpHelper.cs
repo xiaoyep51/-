@@ -159,6 +159,7 @@ namespace RCApp_Win.Logic.Utility
                     Stream imageStream = new FileStream(filePath, FileMode.Open);
                     var streamContent = new StreamContent(imageStream);
                     streamContent.Headers.Add("Content-Type", "application/octet-stream");
+                    fileName = System.Web.HttpUtility.UrlEncode(fileName, Encoding.UTF8);
                     streamContent.Headers.Add("Content-Disposition", "form-data; name=\"Filedata\"; filename=\"" + fileName + "\"");
                     content.Add(streamContent);
                 }
@@ -187,6 +188,35 @@ namespace RCApp_Win.Logic.Utility
             //string res = Encoding.GetEncoding("gb2312").GetString(fileb);
             string res = Encoding.GetEncoding("UTF-8").GetString(fileb);
             return res;
+        }
+
+        public static bool DownloadFile(string url, string localPath)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    HttpResponseMessage response = httpClient.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        byte[] recorde = response.Content.ReadAsByteArrayAsync().Result;
+                        //将文件流写入文件
+                        using (FileStream write = new FileStream(localPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, System.IO.FileShare.Read))
+                        {
+                            write.Write(recorde, 0, recorde.Count());
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
