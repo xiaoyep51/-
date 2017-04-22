@@ -1,0 +1,217 @@
+﻿<wd:WindowBase x:Class="RCApp_Win.View.Salary.A1AwardPunishAddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AwardAddWindow"
+        xmlns:wd="clr-namespace:RCApp_Win"
+        xmlns:cusCtrl="clr-namespace:RCApp_Win.View.Custom_Controls"
+        Height="620" Width="800" WindowName="A1及以上等级奖惩报表录入" Loaded="WindowBase_Loaded">
+    <wd:WindowBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Themes/Styles/Common/ScrollViewerStyle.xaml" />
+                <ResourceDictionary Source="../../Themes/Styles/Common/TabItemStyle.xaml" />
+                <ResourceDictionary Source="../../Themes/Styles/Common/ComboBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </wd:WindowBase.Resources>
+    <Grid x:Name="grd_Main" Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55"/>
+            <RowDefinition Height="95"/>
+            <RowDefinition Height="110"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="员工信息" Grid.Row="0" BorderBrush="Black" BorderThickness="2">
+            <StackPanel Orientation="Horizontal" Height="30">
+                <Label Content="姓名" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                <cusCtrl:AutoCompeleteTextBox Height="22" x:Name="autotxt_EmpName" DelayTime="500" Threshold="2" Width="100" VerticalContentAlignment="Center" HelpInfo="请输入姓名"/>
+                <!--<Label Content="员工编号" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                <TextBox x:Name="txt_empNo" Width="100" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>-->
+                <Label Content="门店" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                <TextBox x:Name="txt_deptName" Width="120" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                <Label Content="店长" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                <TextBox x:Name="txt_deptManager" Width="120" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                <Label Content="等级/基础分" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                <TextBox x:Name="txt_empBaseAndScore" Width="100" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="①奖励积分" Grid.Row="1" BorderBrush="Green" BorderThickness="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <Line X1="530" Y1="20" X2="540" Y2="20" Stroke="#999" StrokeThickness="1"></Line>
+                <Line X1="540" Y1="20" X2="540" Y2="38" Stroke="#999" StrokeThickness="1"></Line>
+                <Line X1="540" Y1="38" X2="130" Y2="38" Stroke="#999" StrokeThickness="1"></Line>
+                <Line X1="130" Y1="38" X2="130" Y2="44" Stroke="#999" StrokeThickness="1" Grid.RowSpan="2"></Line>
+                <StackPanel Orientation="Horizontal" Height="30">
+                    <Label Content="全勤倍数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_FullAttendanceMultiple" Width="60" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="全佣倍数" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_FullCommissionMultiple" Width="60" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="带看规范性倍数" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_GuideWatchMultiple" Width="60" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="合计倍数" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_AwardMultipleSum" Width="60" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                    <Label Content="部分奖励分值合计" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_AwardScorePart1Sum" Width="60" Style="{StaticResource TextBoxStyle1}" IsEnabled="False" TextChanged="GlobalTextChanged" />
+                    <Label Content="租赁奖励积分" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_RentHouseAwardScore" Width="60" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="举报奖励积分" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_ReportAwardScore" Width="60" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="奖励分值总计" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_AwardScoreSum" Width="60" Style="{StaticResource TextBoxStyle1}" IsEnabled="False" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="②考勤惩罚积分" Grid.Row="2" BorderBrush="Red" BorderThickness="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Row="0">
+                    <Label Content="迟到次数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_LateCount" Width="50" Style="{StaticResource TextBoxStyle1}" />
+                    <Label Content="迟到倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_LateMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="早退次数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_LeaveEarlyCount" Width="50" Style="{StaticResource TextBoxStyle1}" />
+                    <Label Content="早退倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_LeaveEarlyMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="代打卡次数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_HelpCheckInCount" Width="50" Style="{StaticResource TextBoxStyle1}" />
+                    <Label Content="代打卡倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_HelpCheckInMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                    <Label Content="未打卡次数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_NotCheckInCount" Width="50" Style="{StaticResource TextBoxStyle1}" />
+                    <Label Content="未打卡倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_NotCheckInMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="旷工次数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_AbsenteeismCount" Width="50" Style="{StaticResource TextBoxStyle1}" />
+                    <Label Content="旷工倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_AbsenteeismMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="事假次数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_AffairLeaveCount" Width="50" Style="{StaticResource TextBoxStyle1}" />
+                    <Label Content="事假倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_AffairLeaveMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2">
+                    <Label Content="病假次数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_SickLeaveCount" Width="50" Style="{StaticResource TextBoxStyle1}" />
+                    <Label Content="病假倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_SickLeaveMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="考勤总扣分倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_AttendanceMultipleSum" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                    <Label Content="考勤处罚积分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_AttendanceDeductScoreSum" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False" TextChanged="GlobalTextChanged" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="③工作量惩罚积分" Grid.Row="0" BorderBrush="Red" BorderThickness="2">
+                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                    <Label Content="工作量差数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_WorkLoadLack" Width="50" Style="{StaticResource TextBoxStyle1}" />
+                    <Label Content="工作量倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_WorkLoadLackMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="工作量扣分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_WorkLoadLackDeductScore" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False" TextChanged="GlobalTextChanged" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="④信息有效性惩罚积分" Grid.Row="0" Grid.Column="1" Grid.RowSpan="4" BorderBrush="Red" BorderThickness="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="43" />
+                        <RowDefinition Height="43" />
+                        <RowDefinition Height="43" />
+                        <RowDefinition Height="43" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0">
+                        <Label Content="房源扣分倍数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                        <TextBox x:Name="txt_PropertyValidMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                        <Label Content="房源扣分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                        <TextBox x:Name="txt_PropertyValidDeductScore" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                        <Label Content="带看扣分倍数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                        <TextBox x:Name="txt_GuideWatchValidMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                        <Label Content="带看扣分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                        <TextBox x:Name="txt_GuideWatchValidDeductScore" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="2">
+                        <Label Content="客源扣分倍数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                        <TextBox x:Name="txt_InquiryVaildMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                        <Label Content="客源扣分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                        <TextBox x:Name="txt_InquiryVaildDeductScore" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="3">
+                        <Label Content="总扣分倍数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                        <TextBox x:Name="txt_InfoValidMultipleSum" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False" TextChanged="GlobalTextChanged" />
+                        <Label Content="总扣分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                        <TextBox x:Name="txt_InfoValidDeductScoreSum" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False" TextChanged="GlobalTextChanged" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="⑤被举报惩罚积分" Grid.Row="1" BorderBrush="Red" BorderThickness="2">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="扣分倍数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_BeReportedMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="被举报扣分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_BeReportedDeductScore" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False" TextChanged="GlobalTextChanged" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="⑥行为规范惩罚积分" Grid.Row="2" BorderBrush="Red" BorderThickness="2">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="着装倍数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_DressUnsuitableMultiple" Width="40" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="外出未签倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_OutWithoutRegisterMultiple" Width="40" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="总扣分倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_BehaviorStandardMultipleSum" Width="40" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                    <Label Content="总扣分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_BehaviorStandardDeductScoreSum" Width="40" Style="{StaticResource TextBoxStyle1}" IsEnabled="False" TextChanged="GlobalTextChanged" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="⑦黄线及客户投诉惩罚积分" Grid.Row="3" BorderBrush="Red" BorderThickness="2">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="黄线倍数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_YellowLineMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="投诉倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_CustomerComplaintsMultiple" Width="50" Style="{StaticResource TextBoxStyle1}" TextChanged="GlobalTextChanged" />
+                    <Label Content="总扣分倍数" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_YellowAndComplaintsMultipleSum" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                    <Label Content="总扣分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_YellowAndComplaintsDeductScoreSum" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False" TextChanged="GlobalTextChanged" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="⑧惩罚积分合计" Grid.Row="4" Grid.ColumnSpan="2" BorderBrush="Red" BorderThickness="2">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="惩罚合计倍数" HorizontalContentAlignment="Left" Margin="2,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_PunishMultipleSum" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                    <Label Content="惩罚合计积分" HorizontalContentAlignment="Left" Margin="10,0,0,0" Padding="0"/>
+                    <TextBox x:Name="txt_PunishDeductScoreSum" Width="50" Style="{StaticResource TextBoxStyle1}" IsEnabled="False"/>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</wd:WindowBase>
