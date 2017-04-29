@@ -122,6 +122,63 @@ namespace RCApp_Win.Logic.Utility
             return response;
         }
 
+        /// <summary>  
+        /// 创建POST方式的HTTP请求  
+        /// </summary>  
+        public static HttpWebResponse CreatePostHttpRequest(string url, string jsonStr, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
+        {
+            HttpWebRequest request = null;
+            //如果是发送HTTPS请求
+            if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+            {
+                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(CheckValidationResult);
+                request = WebRequest.Create(url) as HttpWebRequest;
+                request.ProtocolVersion = HttpVersion.Version10;
+            }
+            else
+            {
+                request = WebRequest.Create(url) as HttpWebRequest;
+            }
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.CookieContainer = new CookieContainer(); //记录cookie
+            //request.Proxy = null;
+            request.KeepAlive = false;
+
+            //设置代理UserAgent和超时
+            if (!string.IsNullOrWhiteSpace(userAgent))
+            {
+                request.UserAgent = userAgent;
+            }
+            if (timeout.HasValue)
+            {
+                request.Timeout = timeout.Value;
+            }
+
+            if (cookies != null)
+            {
+                request.CookieContainer = new CookieContainer();
+                request.CookieContainer.Add(cookies);
+            }
+            //发送POST数据
+            if (!string.IsNullOrWhiteSpace(jsonStr))
+            {
+                byte[] data = Encoding.UTF8.GetBytes(jsonStr);
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+            }
+            else
+            {
+                request.ContentLength = 0;
+            }
+            var response = request.GetResponse() as HttpWebResponse;
+            response.Cookies = request.CookieContainer.GetCookies(request.RequestUri);
+            //request.Abort();
+            return response;
+        }
+
         /// <summary>
         /// 验证证书
         /// </summary>
