@@ -16,7 +16,7 @@ namespace RCApp_Win.Logic.Utility
         /// <summary>  
         /// 创建GET方式的HTTP请求  
         /// </summary>  
-        public static HttpWebResponse CreateGetHttpRequest(string url, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
+        public static HttpWebRequest CreateGetHttpRequest(string url, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
         {
             HttpWebRequest request = null;
             if (url.StartsWith("https", StringComparison.OrdinalIgnoreCase))
@@ -48,13 +48,13 @@ namespace RCApp_Win.Logic.Utility
                 request.CookieContainer = new CookieContainer();
                 request.CookieContainer.Add(cookies);
             }
-            return request.GetResponse() as HttpWebResponse;
+            return request;
         }
 
         /// <summary>  
         /// 创建POST方式的HTTP请求  
         /// </summary>  
-        public static HttpWebResponse CreatePostHttpRequest(string url, IDictionary<string, string> parameters, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
+        public static HttpWebRequest CreatePostHttpRequest(string url, IDictionary<string, string> parameters, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
         {
             HttpWebRequest request = null;
             //如果是发送HTTPS请求
@@ -116,16 +116,13 @@ namespace RCApp_Win.Logic.Utility
             {
                 request.ContentLength = 0;
             }
-            var response = request.GetResponse() as HttpWebResponse;
-            response.Cookies = request.CookieContainer.GetCookies(request.RequestUri);
-            //request.Abort();
-            return response;
+            return request;
         }
 
         /// <summary>  
         /// 创建POST方式的HTTP请求  
         /// </summary>  
-        public static HttpWebResponse CreatePostHttpRequest(string url, string jsonStr, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
+        public static HttpWebRequest CreatePostHttpRequest(string url, string jsonStr, CookieCollection cookies = null, int? timeout = null, string userAgent = "")
         {
             HttpWebRequest request = null;
             //如果是发送HTTPS请求
@@ -173,10 +170,7 @@ namespace RCApp_Win.Logic.Utility
             {
                 request.ContentLength = 0;
             }
-            var response = request.GetResponse() as HttpWebResponse;
-            response.Cookies = request.CookieContainer.GetCookies(request.RequestUri);
-            //request.Abort();
-            return response;
+            return request;
         }
 
         /// <summary>
@@ -187,6 +181,12 @@ namespace RCApp_Win.Logic.Utility
             if (errors == SslPolicyErrors.None)
                 return true;
             return false;
+        }
+
+        public static HttpWebResponse GetHttpResponse(HttpWebRequest request)
+        {
+            var response = request.GetResponse() as HttpWebResponse;
+            return response;
         }
 
         /// <summary>
