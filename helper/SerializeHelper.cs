@@ -8,6 +8,7 @@ using System.Text;
 using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace RCApp_Win.Logic.Utility
 {
@@ -15,8 +16,20 @@ namespace RCApp_Win.Logic.Utility
     {
         public static string SerializeObjectToJson<T>(T t)
         {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            return serializer.Serialize(t);
+            //JavaScriptSerializer serializer = new JavaScriptSerializer();
+            //return serializer.Serialize(t);
+            if (t == null)
+            {
+                return null;
+            }
+            try
+            {
+                return JsonConvert.SerializeObject(t);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public static string SerializeObjectToXml<T>(T t)
@@ -35,8 +48,21 @@ namespace RCApp_Win.Logic.Utility
 
         public static T DeserializeJsonToObject<T>(string json)
         {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            return serializer.Deserialize<T>(json);
+            //JavaScriptSerializer serializer = new JavaScriptSerializer();
+            //return serializer.Deserialize<T>(json);
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return default(T);
+            }
+
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+            catch
+            {
+                return default(T);
+            }
         }
 
         public static T DeserializeXmlToObject<T>(string xml)
